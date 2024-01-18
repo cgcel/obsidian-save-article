@@ -1,17 +1,19 @@
 import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
+import axios from 'axios';
+
 
 // Remember to rename these classes and interfaces!
 
-interface MyPluginSettings {
+interface SaveArticleSettings {
 	mySetting: string;
 }
 
-const DEFAULT_SETTINGS: MyPluginSettings = {
+const DEFAULT_SETTINGS: SaveArticleSettings = {
 	mySetting: 'default'
 }
 
-export default class MyPlugin extends Plugin {
-	settings: MyPluginSettings;
+export default class SaveArticlePlugin extends Plugin {
+	settings: SaveArticleSettings;
 
 	async onload() {
 		await this.loadSettings();
@@ -66,7 +68,7 @@ export default class MyPlugin extends Plugin {
 		});
 
 		// This adds a settings tab so the user can configure various aspects of the plugin
-		this.addSettingTab(new SampleSettingTab(this.app, this));
+		this.addSettingTab(new SaveArticleSettingTab(this.app, this));
 
 		// If the plugin hooks up any global DOM events (on parts of the app that doesn't belong to this plugin)
 		// Using this function will automatically remove the event listener when this plugin is disabled.
@@ -107,10 +109,10 @@ class SampleModal extends Modal {
 	}
 }
 
-class SampleSettingTab extends PluginSettingTab {
-	plugin: MyPlugin;
+class SaveArticleSettingTab extends PluginSettingTab {
+	plugin: SaveArticlePlugin;
 
-	constructor(app: App, plugin: MyPlugin) {
+	constructor(app: App, plugin: SaveArticlePlugin) {
 		super(app, plugin);
 		this.plugin = plugin;
 	}
@@ -131,4 +133,14 @@ class SampleSettingTab extends PluginSettingTab {
 					await this.plugin.saveSettings();
 				}));
 	}
+}
+
+async function fetchHtml(url: string): Promise<void> {
+    try {
+        const response = await axios.get(url);
+        const htmlContent: string = response.data;
+        console.log('HTML Content:', htmlContent);
+    } catch (error) {
+        console.error('Error fetching HTML:', error.message);
+    }
 }
