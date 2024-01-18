@@ -1,11 +1,10 @@
 {
-	"id": "sample-plugin",
-	"name": "Sample Plugin",
-	"version": "1.0.0",
+	"id": "obsidian-save-article",
+	"name": "Save Article",
+	"version": "0.0.1",
 	"minAppVersion": "0.15.0",
-	"description": "Demonstrates some of the capabilities of the Obsidian API.",
-	"author": "Obsidian",
-	"authorUrl": "https://obsidian.md",
-	"fundingUrl": "https://obsidian.md/pricing",
+	"description": "Save an article by grabbing url.",
+	"author": "GC Chen",
+	"authorUrl": "https://github.com/cgcel",
 	"isDesktopOnly": false
 }
