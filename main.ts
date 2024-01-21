@@ -1,4 +1,4 @@
-import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
+import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, requestUrl } from 'obsidian';
 import axios from 'axios';
 
 
@@ -36,7 +36,14 @@ export default class SaveArticlePlugin extends Plugin {
 			name: 'Open sample modal (simple)',
 			callback: () => {
 				new SampleModal(this.app).open();
-			}
+			},
+			editorCallback: async (editor: Editor) => {
+				const htmlContent = await fetchHtml("{input_url}");
+				editor.replaceRange(
+				  htmlContent,
+				  editor.getCursor()
+				);
+			  }
 		});
 		// This adds an editor command that can perform some operation on the current editor instance
 		this.addCommand({
@@ -135,12 +142,14 @@ class SaveArticleSettingTab extends PluginSettingTab {
 	}
 }
 
-async function fetchHtml(url: string): Promise<void> {
+async function fetchHtml(url: string): Promise<string> {
     try {
-        const response = await axios.get(url);
-        const htmlContent: string = response.data;
+        const response = await requestUrl(url);
+        const htmlContent: string = response.text;
         console.log('HTML Content:', htmlContent);
+		return htmlContent;
     } catch (error) {
         console.error('Error fetching HTML:', error.message);
+		throw error;
     }
 }
